@@ -1,0 +1,8 @@
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="app_name">InventoryApp</string>
+    <string name="search_hint">"check out our store"</string>
+    <string name="product_name">"phone1"</string>
+    <string name="product_price">"xxxx"</string>
+
+    <string name="order_summary_email_subject">Just Java order for Pete></string>
+</resources>
