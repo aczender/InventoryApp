@@ -5,4 +5,7 @@
     <string name="product_price">"xxxx"</string>
 
     <string name="order_summary_email_subject">Just Java order for Pete></string>
+
+    <!-- Label for overview category of attributes in the editor [CHAR LIMIT=30] -->
+    <string name="category_overview">Overview</string>
 </resources>
