@@ -50,6 +50,7 @@
     </LinearLayout>
 
     <!-- Measurement category -->
+
     <LinearLayout
         android:id="@+id/container_measurement"
         android:layout_width="match_parent"
@@ -70,44 +71,49 @@
 
             <!-- Weight field -->
             <EditText
-                android:id="@+id/edit_pet_weight"
-                android:hint="@string/hint_pet_weight"
+                    android:id="@+id/edit_device_quantity"
+                android:hint="amount"
                 android:inputType="number"
                 style="@style/EditorFieldStyle" />
 
             <!-- Units for weight (kg) -->
             <TextView
-                android:id="@+id/label_weight_units"
-                android:text="@string/unit_pet_weight"
+                android:id="@+id/label_quantity_units"
+                android:text="pieces"
                 style="@style/EditorUnitsStyle"/>
         </RelativeLayout>
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/container_pricing"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <!-- Label -->
         <TextView
-            android:text="@string/category_overview"
+            android:text="Price"
             style="@style/CategoryStyle" />
 
         <!-- Input fields -->
-        <LinearLayout
+        <RelativeLayout
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="2"
-            android:paddingLeft="4dp"
-            android:orientation="vertical">
+            android:paddingLeft="4dp">
 
-            <!-- Name field -->
+            <!-- Weight field -->
             <EditText
-                android:id="@+id/edit_device_description"
-                android:hint="Description"
-                android:inputType="textCapWords"
+                android:id="@+id/edit_device_price"
+                android:hint="price"
+                android:inputType="number"
                 style="@style/EditorFieldStyle" />
 
-        </LinearLayout>
+            <!-- Units for weight (kg) -->
+            <TextView
+                android:id="@+id/label_price_units"
+                android:text="USD"
+                style="@style/EditorUnitsStyle"/>
+        </RelativeLayout>
     </LinearLayout>
 </LinearLayout>
