@@ -1,18 +1,3 @@
-/*
- * Copyright (C) 2016 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.example.andrew.inventoryapp;
 
 import android.app.AlertDialog;
@@ -23,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -33,14 +17,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.Spinner;
+
 import android.widget.Toast;
 
 import com.example.andrew.inventoryapp.data.InventoryContract.DeviceEntry;
-import com.example.andrew.inventoryapp.data.DeviceDbHelper;
 
 /**
  * Allows user to create a new pet or edit an existing one.
@@ -49,10 +30,11 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
 
     private static final int EXISTING_DEVICE_LOADER = 0;
+    private Uri mCurrentDeviceUri;
     private EditText mNameEditText;
     private EditText mQuantityEditText;
     private EditText mPriceEditText;
-    private Uri mCurrentDeviceUri;
+
 
     private boolean mDeviceHasChanged = false;
 
@@ -92,16 +74,20 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     }
 
     private void saveDevice() {
-        String deviceString = mNameEditText.getText().toString().trim();
+        String nameString = mNameEditText.getText().toString().trim();
         String quantityString = mQuantityEditText.getText().toString().trim();
         //int piece = Integer.parseInt(quantityString);
         String priceString = mPriceEditText.getText().toString().trim();
         //int amount = Integer.parseInt(priceString);
 
+        if(mCurrentDeviceUri == null && TextUtils.isEmpty(nameString) && TextUtils.isEmpty(quantityString) && TextUtils.isEmpty(priceString)) {
+            return;
+        }
+
 
         ContentValues values = new ContentValues();
 
-        values.put(DeviceEntry.COLUMN_DEVICE_NAME, deviceString);
+        values.put(DeviceEntry.COLUMN_DEVICE_NAME, nameString);
 
         int quantity = 0;
         if (!TextUtils.isEmpty(quantityString)) {
@@ -113,15 +99,16 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         if (!TextUtils.isEmpty(priceString)) {
             price = Integer.parseInt(priceString);
         }
-        values.put(DeviceEntry.COLUMN_DEVICE_PRICE, priceString);
+        values.put(DeviceEntry.COLUMN_DEVICE_PRICE, price);
 
         if (mCurrentDeviceUri == null) {
             Uri newUri = getContentResolver().insert(DeviceEntry.CONTENT_URI, values);
 
             if (newUri == null) {
-                Toast.makeText(this, "Error with saving device", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.editor_insert_device_failed), Toast.LENGTH_SHORT)
+                .show();
             } else {
-                Toast.makeText(this, "Device saved", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.editor_update_device_successful), Toast.LENGTH_SHORT).show();
             }
         } else {
             int rowsAffected = getContentResolver().update(mCurrentDeviceUri, values, null, null);
@@ -141,7 +128,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     }
 
     @Override
-    public boolean onPrepareOptionsMenu (Menu menu) {
+    public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
         if (mCurrentDeviceUri == null) {
@@ -150,6 +137,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

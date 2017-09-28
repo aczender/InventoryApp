@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.support.design.widget.FloatingActionButton;
 import android.widget.TextView;
@@ -30,8 +32,7 @@ import com.example.andrew.inventoryapp.data.DeviceDbHelper;
 /**
  * Displays list of pets that were entered and stored in the app.
  */
-public class CatalogActivity extends AppCompatActivity implements LoaderManager
-        .LoaderCallbacks<Cursor> {
+public class CatalogActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int DEVICE_LOADER = 0;
 
@@ -42,8 +43,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_catalog);
 
-        // Setup FAB to open EditorActivity
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.floatingActionButton);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -51,6 +51,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager
                 startActivity(intent);
             }
         });
+
 
         ListView deviceListView = (ListView) findViewById(R.id.list);
 
@@ -74,14 +75,14 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager
         getLoaderManager().initLoader(DEVICE_LOADER, null, this);
     }
 
-    private void insertDevice() {
+    /*private void insertDevice() {
         ContentValues values = new ContentValues();
         values.put(DeviceEntry.COLUMN_DEVICE_NAME, "Phone");
         values.put(DeviceEntry.COLUMN_DEVICE_QUANTITY, 2);
         values.put(DeviceEntry.COLUMN_DEVICE_PRICE, 20);
 
         Uri newUri = getContentResolver().insert(DeviceEntry.CONTENT_URI, values);
-    }
+    }*/
 
     private void deleteAllDevices() {
         int rowsDeleted = getContentResolver().delete(DeviceEntry.CONTENT_URI, null, null);
@@ -114,10 +115,12 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager
                 null,
                 null);
     }
+
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mCursorAdapter.swapCursor(data);
     }
+
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mCursorAdapter.swapCursor(null);
