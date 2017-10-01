@@ -29,7 +29,10 @@ import com.example.andrew.inventoryapp.data.InventoryContract.DeviceEntry;
 public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
 
+    private static final String LOG_TAG = EditorActivity.class.getName();
+
     private static final int EXISTING_DEVICE_LOADER = 0;
+
     private Uri mCurrentDeviceUri;
     private EditText mNameEditText;
     private EditText mQuantityEditText;
@@ -80,10 +83,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         String priceString = mPriceEditText.getText().toString().trim();
         //int amount = Integer.parseInt(priceString);
 
-        if(mCurrentDeviceUri == null && TextUtils.isEmpty(nameString) && TextUtils.isEmpty(quantityString) && TextUtils.isEmpty(priceString)) {
-            return;
-        }
-
 
         ContentValues values = new ContentValues();
 
@@ -101,23 +100,13 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
         values.put(DeviceEntry.COLUMN_DEVICE_PRICE, price);
 
-        if (mCurrentDeviceUri == null) {
-            Uri newUri = getContentResolver().insert(DeviceEntry.CONTENT_URI, values);
+        Uri newUri = getContentResolver().insert(DeviceEntry.CONTENT_URI, values);
 
-            if (newUri == null) {
-                Toast.makeText(this, getString(R.string.editor_insert_device_failed), Toast.LENGTH_SHORT)
-                .show();
-            } else {
-                Toast.makeText(this, getString(R.string.editor_update_device_successful), Toast.LENGTH_SHORT).show();
-            }
+        if (newUri == null) {
+            Toast.makeText(this, getString(R.string.editor_insert_device_failed), Toast.LENGTH_SHORT)
+                    .show();
         } else {
-            int rowsAffected = getContentResolver().update(mCurrentDeviceUri, values, null, null);
-
-            if (rowsAffected == 0) {
-                Toast.makeText(this, "Error with updating device", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "Device updated", Toast.LENGTH_SHORT).show();
-            }
+            Toast.makeText(this, getString(R.string.editor_update_device_successful), Toast.LENGTH_SHORT).show();
         }
     }
 

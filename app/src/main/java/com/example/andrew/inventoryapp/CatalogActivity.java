@@ -11,8 +11,6 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -21,13 +19,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.support.design.widget.FloatingActionButton;
-import android.widget.TextView;
 
 import com.example.andrew.inventoryapp.data.InventoryContract.DeviceEntry;
-import com.example.andrew.inventoryapp.data.DeviceDbHelper;
 
 /**
  * Displays list of pets that were entered and stored in the app.
@@ -104,10 +99,12 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+    public Loader<Cursor> onCreateLoader(int i, Bundle args) {
         String[] projection = {
                 DeviceEntry._ID,
-                DeviceEntry.COLUMN_DEVICE_NAME};
+                DeviceEntry.COLUMN_DEVICE_NAME,
+                DeviceEntry.COLUMN_DEVICE_QUANTITY,
+                DeviceEntry.COLUMN_DEVICE_PRICE};
         return new CursorLoader(this,
                 DeviceEntry.CONTENT_URI,
                 projection,

@@ -16,13 +16,19 @@ import com.example.andrew.inventoryapp.data.InventoryContract.DeviceEntry;
  */
 public class DeviceProvider extends ContentProvider {
 
-    /** Tag for the log messages */
+    /**
+     * Tag for the log messages
+     */
     public static final String LOG_TAG = DeviceProvider.class.getSimpleName();
 
-    /** URI matcher code for the content URI for the pets table */
+    /**
+     * URI matcher code for the content URI for the pets table
+     */
     private static final int DEVICES = 100;
 
-    /** URI matcher code for the content URI for a single pet in the pets table */
+    /**
+     * URI matcher code for the content URI for a single pet in the pets table
+     */
     private static final int DEVICE_ID = 101;
 
     private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -50,7 +56,9 @@ public class DeviceProvider extends ContentProvider {
                 "/#", DEVICE_ID);
     }
 
-    /** Database helper object */
+    /**
+     * Database helper object
+     */
     private DeviceDbHelper mDbHelper;
 
 
@@ -95,7 +103,7 @@ public class DeviceProvider extends ContentProvider {
                 // arguments that will fill in the "?". Since we have 1 question mark in the
                 // selection, we have 1 String in the selection arguments' String array.
                 selection = DeviceEntry._ID + "=?";
-                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
 
                 // This will perform a query on the pets table where the _id equals 3 to return a
                 // Cursor containing that row of the table.
@@ -115,12 +123,13 @@ public class DeviceProvider extends ContentProvider {
         return cursor;
     }
 
+
     @Override
     public Uri insert(Uri uri, ContentValues contentValues) {
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case DEVICES:
-                return insertPet(uri, contentValues);
+                return insertDevice(uri, contentValues);
             default:
                 throw new IllegalArgumentException("Insertion is not supported for " + uri);
         }
@@ -130,7 +139,7 @@ public class DeviceProvider extends ContentProvider {
      * Insert a pet into the database with the given content values. Return the new content URI
      * for that specific row in the database.
      */
-    private Uri insertPet(Uri uri, ContentValues values) {
+    private Uri insertDevice(Uri uri, ContentValues values) {
         // Check that the name is not null
         String name = values.getAsString(DeviceEntry.COLUMN_DEVICE_NAME);
         if (name == null) {
@@ -161,10 +170,45 @@ public class DeviceProvider extends ContentProvider {
         }
 
         // Notify all listeners that the data has changed for the pet content URI
+        //uri: content://com.example.andrew.inventoryapp/inventoryapp
         getContext().getContentResolver().notifyChange(uri, null);
 
         // Return the new URI with the ID (of the newly inserted row) appended at the end
         return ContentUris.withAppendedId(uri, id);
+    }
+
+    @Override
+    public int delete(Uri uri, String selection, String[] selectionArgs) {
+        // Get writeable database
+        SQLiteDatabase database = mDbHelper.getWritableDatabase();
+
+        // Track the number of rows that were deleted
+        int rowsDeleted;
+
+        final int match = sUriMatcher.match(uri);
+        switch (match) {
+            case DEVICES:
+                // Delete all rows that match the selection and selection args
+                rowsDeleted = database.delete(DeviceEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+            case DEVICE_ID:
+                // Delete a single row given by the ID in the URI
+                selection = DeviceEntry._ID + "=?";
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
+                rowsDeleted = database.delete(DeviceEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+            default:
+                throw new IllegalArgumentException("Deletion is not supported for " + uri);
+        }
+
+        // If 1 or more rows were deleted, then notify all listeners that the data at the
+        // given URI has changed
+        if (rowsDeleted != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+
+        // Return the number of rows deleted
+        return rowsDeleted;
     }
 
     @Override
@@ -179,7 +223,7 @@ public class DeviceProvider extends ContentProvider {
                 // so we know which row to update. Selection will be "_id=?" and selection
                 // arguments will be a String array containing the actual ID.
                 selection = DeviceEntry._ID + "=?";
-                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 return updateDevice(uri, contentValues, selection, selectionArgs);
             default:
                 throw new IllegalArgumentException("Update is not supported for " + uri);
@@ -241,39 +285,6 @@ public class DeviceProvider extends ContentProvider {
         return rowsUpdated;
     }
 
-    @Override
-    public int delete(Uri uri, String selection, String[] selectionArgs) {
-        // Get writeable database
-        SQLiteDatabase database = mDbHelper.getWritableDatabase();
-
-        // Track the number of rows that were deleted
-        int rowsDeleted;
-
-        final int match = sUriMatcher.match(uri);
-        switch (match) {
-            case DEVICES:
-                // Delete all rows that match the selection and selection args
-                rowsDeleted = database.delete(DeviceEntry.TABLE_NAME, selection, selectionArgs);
-                break;
-            case DEVICE_ID:
-                // Delete a single row given by the ID in the URI
-                selection = DeviceEntry._ID + "=?";
-                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
-                rowsDeleted = database.delete(DeviceEntry.TABLE_NAME, selection, selectionArgs);
-                break;
-            default:
-                throw new IllegalArgumentException("Deletion is not supported for " + uri);
-        }
-
-        // If 1 or more rows were deleted, then notify all listeners that the data at the
-        // given URI has changed
-        if (rowsDeleted != 0) {
-            getContext().getContentResolver().notifyChange(uri, null);
-        }
-
-        // Return the number of rows deleted
-        return rowsDeleted;
-    }
 
     @Override
     public String getType(Uri uri) {
