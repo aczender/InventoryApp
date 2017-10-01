@@ -81,7 +81,11 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         String quantityString = mQuantityEditText.getText().toString().trim();
         //int piece = Integer.parseInt(quantityString);
         String priceString = mPriceEditText.getText().toString().trim();
-        //int amount = Integer.parseInt(priceString);
+
+        if (mCurrentDeviceUri == null && TextUtils.isEmpty(nameString) && TextUtils.isEmpty
+                (quantityString) && TextUtils.isEmpty(priceString)) {
+            return;
+        }
 
 
         ContentValues values = new ContentValues();

@@ -70,14 +70,14 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         getLoaderManager().initLoader(DEVICE_LOADER, null, this);
     }
 
-    /*private void insertDevice() {
+    private void insertDevice() {
         ContentValues values = new ContentValues();
         values.put(DeviceEntry.COLUMN_DEVICE_NAME, "Phone");
         values.put(DeviceEntry.COLUMN_DEVICE_QUANTITY, 2);
         values.put(DeviceEntry.COLUMN_DEVICE_PRICE, 20);
 
         Uri newUri = getContentResolver().insert(DeviceEntry.CONTENT_URI, values);
-    }*/
+    }
 
     private void deleteAllDevices() {
         int rowsDeleted = getContentResolver().delete(DeviceEntry.CONTENT_URI, null, null);
@@ -91,6 +91,9 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_insert_dummy_data:
+                insertDevice();
+                return true;
             case R.id.action_delete_all_entries:
                 deleteAllDevices();
                 return true;

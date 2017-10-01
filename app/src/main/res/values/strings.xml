@@ -35,6 +35,8 @@
     <!-- Toast message in editor when current pet was successfully updated [CHAR LIMIT=NONE] -->
     <string name="editor_update_device_successful">Device updated</string>
 
+    <string name="action_insert_dummy_data">Insert Dummy Data</string>
+
     <!-- Dialog button text for the option to confirm deleting the current pet [CHAR LIMIT=20] -->
     <string name="delete">Delete</string>
 

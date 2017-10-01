@@ -19,7 +19,7 @@ public final class InventoryContract {
      * content authority is the package name for the app, which is guaranteed to be unique on the
      * device.
      */
-    public static final String CONTENT_AUTHORITY = "com.example.andrew.inventory";
+    public static final String CONTENT_AUTHORITY = "com.example.andrew.inventoryapp";
 
     /**
      * Use CONTENT_AUTHORITY to create the base of all URI's which apps will use to contact
@@ -81,6 +81,8 @@ public final class InventoryContract {
         public final static String COLUMN_DEVICE_QUANTITY = "quantity";
 
         public final static String COLUMN_DEVICE_PRICE = "price";
+        public final static String COLUMN_CONTACT_INFO = "contact";
+        public final static String COLUMN_DEVICE_PICTURE = "picture";
 
     }
 

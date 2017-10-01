@@ -36,7 +36,7 @@ public class DeviceDbHelper extends SQLiteOpenHelper {
         String SQL_CREATE_STORE_TABLE =  "CREATE TABLE " + DeviceEntry.TABLE_NAME + " ("
                 + DeviceEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + DeviceEntry.COLUMN_DEVICE_NAME + " TEXT NOT NULL, "
-                + DeviceEntry.COLUMN_DEVICE_QUANTITY + " INTEGER NOT NULL DEFAULT 0"
+                + DeviceEntry.COLUMN_DEVICE_QUANTITY + " INTEGER NOT NULL DEFAULT 0, "
                 + DeviceEntry.COLUMN_DEVICE_PRICE + " INTEGER NOT NULL DEFAULT 0);";
 
         // Execute the SQL statement
