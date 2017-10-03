@@ -26,11 +26,11 @@ import static com.example.andrew.inventoryapp.data.InventoryContract.DeviceEntry
 import static com.example.andrew.inventoryapp.data.InventoryContract.DeviceEntry.COLUMN_DEVICE_NAME;
 import static com.example.andrew.inventoryapp.data.InventoryContract.DeviceEntry.COLUMN_DEVICE_QUANTITY;
 
-public class DeviceDetail extends AppCompatActivity
+public class DeviceDetailActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
     /** Tag for log messages */
-    private static final String LOG_TAG = DeviceDetail.class.getName();
+    private static final String LOG_TAG = DeviceDetailActivity.class.getName();
 
     /**
      * Identifier for the pet data loader
@@ -154,7 +154,7 @@ public class DeviceDetail extends AppCompatActivity
                     // we want to modify.
                     int rowsUpdate = getContentResolver().update(mCurrentPhoneUri, updateValues, null, null);
                 } else {
-                    Toast.makeText(DeviceDetail.this, "Quantity is 0 and can't be reduced.", Toast
+                    Toast.makeText(DeviceDetailActivity.this, "Quantity is 0 and can't be reduced.", Toast
                             .LENGTH_SHORT).show();
                 };
 
@@ -204,7 +204,7 @@ public class DeviceDetail extends AppCompatActivity
 
                 // Create an AlertDialog.Builder and set the message, and click listeners
                 // for the positive and negative buttons on the dialog.
-                AlertDialog.Builder builder = new AlertDialog.Builder(DeviceDetail.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(DeviceDetailActivity.this);
                 builder.setMessage(R.string.delete_dialog_msg);
                 builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {

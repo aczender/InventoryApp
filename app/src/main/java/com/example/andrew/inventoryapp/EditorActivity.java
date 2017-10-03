@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
@@ -17,8 +18,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.andrew.inventoryapp.data.InventoryContract.DeviceEntry;
@@ -31,23 +34,17 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     private static final String LOG_TAG = EditorActivity.class.getName();
 
-    private static final int EXISTING_DEVICE_LOADER = 0;
+    private static final int PICK_IMAGE_REQUEST = 0;
 
     private Uri mCurrentDeviceUri;
     private EditText mNameEditText;
     private EditText mQuantityEditText;
     private EditText mPriceEditText;
+    private EditText mContactEditText;
+    private TextView mPictureText;
 
-
-    private boolean mDeviceHasChanged = false;
-
-    private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            mDeviceHasChanged = true;
-            return false;
-        }
-    };
+    private Uri mUri;
+    private TextView mTextView;
 
 
     @Override
@@ -55,57 +52,44 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
 
-        Intent intent = getIntent();
-        mCurrentDeviceUri = intent.getData();
+        mTextView = (TextView) findViewById(R.id.image_uri);
 
-        if (mCurrentDeviceUri == null) {
-            setTitle("Add a device");
-            invalidateOptionsMenu();
-        } else {
-            setTitle("Edit device");
-            getLoaderManager().initLoader(EXISTING_DEVICE_LOADER, null, this);
-        }
+        Button pictureButton = (Button) findViewById(R.id.add_picture);
+        pictureButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openImageSelector();
+            }
+        });
 
         mNameEditText = (EditText) findViewById(R.id.edit_device_name);
         mQuantityEditText = (EditText) findViewById(R.id.edit_device_quantity);
         mPriceEditText = (EditText) findViewById(R.id.edit_device_price);
-
-        mNameEditText.setOnTouchListener(mTouchListener);
-        mQuantityEditText.setOnTouchListener(mTouchListener);
-        mPriceEditText.setOnTouchListener(mTouchListener);
-
+        mContactEditText = (EditText) findViewById(R.id.edit_device_contact);
+        mPictureText = (TextView) findViewById(R.id.image_uri);
     }
 
     private void saveDevice() {
         String nameString = mNameEditText.getText().toString().trim();
         String quantityString = mQuantityEditText.getText().toString().trim();
-        //int piece = Integer.parseInt(quantityString);
         String priceString = mPriceEditText.getText().toString().trim();
+        String contactString = mContactEditText.getText().toString().trim();
+        String pictureString = mPictureText.getText().toString().trim();
 
         if (mCurrentDeviceUri == null && TextUtils.isEmpty(nameString) && TextUtils.isEmpty
                 (quantityString) && TextUtils.isEmpty(priceString)) {
             return;
         }
 
-
         ContentValues values = new ContentValues();
 
         values.put(DeviceEntry.COLUMN_DEVICE_NAME, nameString);
-
-        int quantity = 0;
-        if (!TextUtils.isEmpty(quantityString)) {
-            quantity = Integer.parseInt(quantityString);
-        }
-        values.put(DeviceEntry.COLUMN_DEVICE_QUANTITY, quantity);
-
-        int price = 0;
-        if (!TextUtils.isEmpty(priceString)) {
-            price = Integer.parseInt(priceString);
-        }
-        values.put(DeviceEntry.COLUMN_DEVICE_PRICE, price);
+        values.put(DeviceEntry.COLUMN_DEVICE_QUANTITY, quantityString);
+        values.put(DeviceEntry.COLUMN_DEVICE_PRICE, priceString);
+        values.put(DeviceEntry.COLUMN_CONTACT_INFO, contactString);
+        values.put(DeviceEntry.COLUMN_DEVICE_PICTURE, pictureString);
 
         Uri newUri = getContentResolver().insert(DeviceEntry.CONTENT_URI, values);
-
         if (newUri == null) {
             Toast.makeText(this, getString(R.string.editor_insert_device_failed), Toast.LENGTH_SHORT)
                     .show();
@@ -120,128 +104,74 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         return true;
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-
-        if (mCurrentDeviceUri == null) {
-            MenuItem menuItem = menu.findItem(R.id.action_delete);
-            menuItem.setVisible(false);
-        }
-        return true;
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_save:
+                String nameString = mNameEditText.getText().toString().trim();
+                String quantityString = mQuantityEditText.getText().toString().trim();
+                String priceString = mPriceEditText.getText().toString().trim();
+                String contactString = mContactEditText.getText().toString().trim();
+                String pictureString = mPictureText.getText().toString().trim();
+
+                if (TextUtils.isEmpty(nameString)) {
+                    Toast.makeText(this, getString(R.string.name_required), Toast.LENGTH_SHORT)
+                            .show();
+                    return false;
+                } else if (TextUtils.isEmpty(quantityString)) {
+                    Toast.makeText(this, getString(R.string.quantity_required),
+                            Toast.LENGTH_SHORT).show();
+                    return false;
+                } else if (TextUtils.isEmpty(priceString)) {
+                    Toast.makeText(this, getString(R.string.price_required),
+                            Toast.LENGTH_SHORT).show();
+                    return false;
+                } else if (TextUtils.isEmpty(contactString)) {
+                    Toast.makeText(this, getString(R.string.contact_required),
+                            Toast.LENGTH_SHORT).show();
+                    return false;
+                } else if (TextUtils.isEmpty(pictureString)) {
+                    Toast.makeText(this, getString(R.string.picture_required),
+                            Toast.LENGTH_SHORT).show();
+                    return false;
+                }
                 saveDevice();
                 finish();
                 return true;
             case R.id.action_delete:
                 showDeleteConfirmationDialog();
                 return true;
-            case android.R.id.home:
-                if (!mDeviceHasChanged) {
-                    NavUtils.navigateUpFromSameTask(EditorActivity.this);
-                    return true;
-                }
-
-                DialogInterface.OnClickListener discardButtonClickListener =
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                // User clicked "Discard" button, navigate to parent activity.
-                                NavUtils.navigateUpFromSameTask(EditorActivity.this);
-                            }
-                        };
-
-                // Show a dialog that notifies the user they have unsaved changes
-                showUnsavedChangesDialog(discardButtonClickListener);
-                return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * This method is called when the back button is pressed.
-     */
-    @Override
-    public void onBackPressed() {
-        // If the pet hasn't changed, continue with handling back button press
-        if (!mDeviceHasChanged) {
-            super.onBackPressed();
-            return;
+    public void openImageSelector() {
+        Intent intent;
+
+        if (Build.VERSION.SDK_INT < 19) {
+            intent = new Intent(Intent.ACTION_GET_CONTENT);
+        } else {
+            intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
         }
 
-        // Otherwise if there are unsaved changes, setup a dialog to warn the user.
-        // Create a click listener to handle the user confirming that changes should be discarded.
-        DialogInterface.OnClickListener discardButtonClickListener =
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        // User clicked "Discard" button, close the current activity.
-                        finish();
-                    }
-                };
-
-        // Show dialog that there are unsaved changes
-        showUnsavedChangesDialog(discardButtonClickListener);
+        intent.setType("image/*");
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }
+
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        // Since the editor shows all pet attributes, define a projection that contains
-        // all columns from the pet table
-        String[] projection = {
-                DeviceEntry._ID,
-                DeviceEntry.COLUMN_DEVICE_NAME,
-                DeviceEntry.COLUMN_DEVICE_QUANTITY,
-                DeviceEntry.COLUMN_DEVICE_PRICE};
-
-        // This loader will execute the ContentProvider's query method on a background thread
-        return new CursorLoader(this,   // Parent activity context
-                mCurrentDeviceUri,         // Query the content URI for the current pet
-                projection,             // Columns to include in the resulting Cursor
-                null,                   // No selection clause
-                null,                   // No selection arguments
-                null);                  // Default sort order
+        return null;
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        // Bail early if the cursor is null or there is less than 1 row in the cursor
-        if (cursor == null || cursor.getCount() < 1) {
-            return;
-        }
-
-        // Proceed with moving to the first row of the cursor and reading data from it
-        // (This should be the only row in the cursor)
-        if (cursor.moveToFirst()) {
-            // Find the columns of pet attributes that we're interested in
-            int nameColumnIndex = cursor.getColumnIndex(DeviceEntry.COLUMN_DEVICE_NAME);
-            int quantityColumnIndex = cursor.getColumnIndex(DeviceEntry.COLUMN_DEVICE_QUANTITY);
-            int priceColumnIndex = cursor.getColumnIndex(DeviceEntry.COLUMN_DEVICE_PRICE);
-
-
-            // Extract out the value from the Cursor for the given column index
-            String name = cursor.getString(nameColumnIndex);
-            int quantity = cursor.getInt(quantityColumnIndex);
-            int price = cursor.getInt(priceColumnIndex);
-
-            // Update the views on the screen with the values from the database
-            mNameEditText.setText(name);
-            mQuantityEditText.setText(Integer.toString(quantity));
-            mPriceEditText.setText(Integer.toString(price));
-        }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        // If the loader is invalidated, clear out all the data from the input fields.
-        mNameEditText.setText("");
-        mQuantityEditText.setText("");
-        mPriceEditText.setText("");
     }
 
     /**

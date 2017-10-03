@@ -37,6 +37,12 @@
 
     <string name="action_insert_dummy_data">Insert Dummy Data</string>
 
+    <string name="name_required">Please enter a name</string>
+    <string name="price_required">Please enter a price</string>
+    <string name="quantity_required">Please enter a quantity</string>
+    <string name="picture_required">Please enter a picture</string>
+    <string name="contact_required">Please enter a contact</string>
+
     <!-- Dialog button text for the option to confirm deleting the current pet [CHAR LIMIT=20] -->
     <string name="delete">Delete</string>
 

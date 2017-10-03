@@ -1,9 +1,5 @@
 package com.example.andrew.inventoryapp;
 
-/**
- * Created by Andrew on 2017.09.17..
- */
-
 import android.app.LoaderManager;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -24,11 +20,13 @@ import android.support.design.widget.FloatingActionButton;
 
 import com.example.andrew.inventoryapp.data.InventoryContract.DeviceEntry;
 
+
 /**
  * Displays list of pets that were entered and stored in the app.
  */
 public class CatalogActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
+    private static final String LOG_TAG = CatalogActivity.class.getName();
     private static final int DEVICE_LOADER = 0;
 
     DeviceCursorAdapter mCursorAdapter;
@@ -59,7 +57,8 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         deviceListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                Intent intent = new Intent(CatalogActivity.this, EditorActivity.class);
+                Log.i(LOG_TAG, "Test");
+                Intent intent = new Intent(CatalogActivity.this, DeviceDetailActivity.class);
 
                 Uri currentDeviceUri = ContentUris.withAppendedId(DeviceEntry.CONTENT_URI, id);
                 intent.setData(currentDeviceUri);
@@ -75,6 +74,8 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         values.put(DeviceEntry.COLUMN_DEVICE_NAME, "Phone");
         values.put(DeviceEntry.COLUMN_DEVICE_QUANTITY, 2);
         values.put(DeviceEntry.COLUMN_DEVICE_PRICE, 20);
+        values.put(DeviceEntry.COLUMN_CONTACT_INFO, "sg@sg.com");
+        values.put(DeviceEntry.COLUMN_DEVICE_PICTURE, "samplepic");
 
         Uri newUri = getContentResolver().insert(DeviceEntry.CONTENT_URI, values);
     }
@@ -107,7 +108,9 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
                 DeviceEntry._ID,
                 DeviceEntry.COLUMN_DEVICE_NAME,
                 DeviceEntry.COLUMN_DEVICE_QUANTITY,
-                DeviceEntry.COLUMN_DEVICE_PRICE};
+                DeviceEntry.COLUMN_DEVICE_PRICE,
+                DeviceEntry.COLUMN_CONTACT_INFO};
+
         return new CursorLoader(this,
                 DeviceEntry.CONTENT_URI,
                 projection,
