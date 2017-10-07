@@ -6,11 +6,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.andrew.inventoryapp.data.InventoryContract.DeviceEntry;
 
-
-/**
- * Created by Andrew on 2017.08.13..
- */
-
 public class DeviceDbHelper extends SQLiteOpenHelper {
     public static final String LOG_TAG = DeviceDbHelper.class.getSimpleName();
 
@@ -32,7 +27,7 @@ public class DeviceDbHelper extends SQLiteOpenHelper {
      */
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // Create a String that contains the SQL statement to create the pets table
+        // Create a String that contains the SQL statement to create the devices table
         String SQL_CREATE_STORE_TABLE =  "CREATE TABLE " + DeviceEntry.TABLE_NAME + " ("
                 + DeviceEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + DeviceEntry.COLUMN_DEVICE_NAME + " TEXT NOT NULL, "

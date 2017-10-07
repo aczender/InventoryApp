@@ -31,7 +31,7 @@
             <EditText
                 android:id="@+id/edit_device_name"
                 style="@style/EditorFieldStyle"
-                android:hint="Name"
+                android:hint="@string/editor_hintname"
                 android:inputType="textCapWords"/>
 
         </LinearLayout>
@@ -48,7 +48,7 @@
         <!-- Label -->
         <TextView
             style="@style/CategoryStyle"
-            android:text="Quantity"/>
+            android:text="@string/category_quantity"/>
 
         <!-- Input fields -->
         <RelativeLayout
@@ -61,14 +61,14 @@
             <EditText
                 android:id="@+id/edit_device_quantity"
                 style="@style/EditorFieldStyle"
-                android:hint="amount"
+                android:hint="@string/editor_hintquantity"
                 android:inputType="number"/>
 
-            <!-- Units for weight (kg) -->
+            <!-- Units for amount -->
             <TextView
                 android:id="@+id/label_quantity_units"
                 style="@style/EditorUnitsStyle"
-                android:text="pieces"/>
+                android:text="@string/editor_pieces"/>
         </RelativeLayout>
     </LinearLayout>
 
@@ -81,7 +81,7 @@
         <!-- Label -->
         <TextView
             style="@style/CategoryStyle"
-            android:text="Price"/>
+            android:text="@string/category_price"/>
 
         <!-- Input fields -->
         <RelativeLayout
@@ -94,14 +94,14 @@
             <EditText
                 android:id="@+id/edit_device_price"
                 style="@style/EditorFieldStyle"
-                android:hint="price"
+                android:hint="@string/editor_hintprice"
                 android:inputType="number"/>
 
             <!-- Units for weight (kg) -->
             <TextView
                 android:id="@+id/label_price_units"
                 style="@style/EditorUnitsStyle"
-                android:text="USD"/>
+                android:text="@string/editor_price"/>
         </RelativeLayout>
     </LinearLayout>
 
@@ -111,22 +111,22 @@
         android:orientation="horizontal">
 
         <TextView
-            android:text="Supllier contact"
-            style="@style/CategoryStyle" />
+            style="@style/CategoryStyle"
+            android:text="@string/category_contact"/>
 
         <!-- Input fields -->
         <LinearLayout
-            android:layout_height="wrap_content"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:paddingLeft="4dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingLeft="4dp">
 
             <EditText
                 android:id="@+id/edit_device_contact"
-                android:hint="sg@sg.com"
-                android:inputType="textEmailAddress"
-                style="@style/EditorFieldStyle" />
+                style="@style/EditorFieldStyle"
+                android:hint="@string/category_hintemail"
+                android:inputType="textEmailAddress"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -134,9 +134,9 @@
         android:id="@+id/add_picture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="add picture"/>
+        android:text="@string/picture_button"/>
     <TextView
         android:id="@+id/image_uri"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"/>
 </LinearLayout>

@@ -29,7 +29,9 @@ import static com.example.andrew.inventoryapp.data.InventoryContract.DeviceEntry
 public class DeviceDetailActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    /** Tag for log messages */
+    /**
+     * Tag for log messages
+     */
     private static final String LOG_TAG = DeviceDetailActivity.class.getName();
 
     /**
@@ -53,7 +55,6 @@ public class DeviceDetailActivity extends AppCompatActivity
         Intent intent = getIntent();
         mCurrentDeviceUri = intent.getData();
 
-        // Find the views which will be populated with the phone data
         mNameTextView = (TextView) findViewById(R.id.display_device_name);
         mQuantityTextView = (TextView) findViewById(R.id.display_device_quantity);
         mPriceTextView = (TextView) findViewById(R.id.display_device_price);
@@ -90,7 +91,7 @@ public class DeviceDetailActivity extends AppCompatActivity
         // Proceed with moving to the first row of the cursor and reading data from it
         // (This should be the only row in the cursor)
         if (cursor.moveToFirst()) {
-            // Find the columns of phone attributes that we're interested in
+            // Find the columns of device attributes that we're interested in
             int nameColumnIndex = cursor.getColumnIndex(COLUMN_DEVICE_NAME);
             int quantityColumnIndex = cursor.getColumnIndex(COLUMN_DEVICE_QUANTITY);
             int priceColumnIndex = cursor.getColumnIndex(DeviceEntry.COLUMN_DEVICE_PRICE);
@@ -125,15 +126,15 @@ public class DeviceDetailActivity extends AppCompatActivity
                 // Perform action on click
                 Log.i(LOG_TAG, "TEST: Minus onClick called");
 
-                //get the Uri for the current phone
+                //get the Uri for the current device
                 int itemIdColumnIndex = cursor.getColumnIndex(DeviceEntry._ID);
                 final long itemId = cursor.getLong(itemIdColumnIndex);
-                Uri mCurrentPhoneUri = ContentUris.withAppendedId(DeviceEntry.CONTENT_URI, itemId);
+                Uri mCurrentDeviceUri = ContentUris.withAppendedId(DeviceEntry.CONTENT_URI, itemId);
 
-                // Find the columns of phone attributes that we're interested in
+                // Find the columns of device attributes that we're interested in
                 int quantityColumnIndex = cursor.getColumnIndex(COLUMN_DEVICE_QUANTITY);
 
-                //read the phone attributes from the Cursor for the current phone
+                //read the device attributes from the Cursor for the current device
                 String deviceQuantity = cursor.getString(quantityColumnIndex);
 
                 //convert the string to an integer
@@ -148,15 +149,12 @@ public class DeviceDetailActivity extends AppCompatActivity
                     ContentValues updateValues = new ContentValues();
                     updateValues.put(COLUMN_DEVICE_QUANTITY, updateQuantity);
 
-                    //update the phone with the content URI mCurrentPhoneUri and pass in the new
-                    //content values. Pass in null for the selection and selection args
-                    //because mCurrentPhoneUri will already identify the correct row in the database that
-                    // we want to modify.
-                    int rowsUpdate = getContentResolver().update(mCurrentPhoneUri, updateValues, null, null);
+                    int rowsUpdate = getContentResolver().update(mCurrentDeviceUri, updateValues,
+                            null, null);
                 } else {
                     Toast.makeText(DeviceDetailActivity.this, "Quantity is 0 and can't be reduced.", Toast
                             .LENGTH_SHORT).show();
-                };
+                }
 
             }
         });
@@ -167,15 +165,13 @@ public class DeviceDetailActivity extends AppCompatActivity
                 // Perform action on click
                 Log.i(LOG_TAG, "TEST: Plus onClick called");
 
-                //get the Uri for the current phone
+
                 int itemIdColumnIndex = cursor.getColumnIndex(DeviceEntry._ID);
                 final long itemId = cursor.getLong(itemIdColumnIndex);
-                Uri mCurrentPhoneUri = ContentUris.withAppendedId(DeviceEntry.CONTENT_URI, itemId);
+                Uri mCurrentDeviceUri = ContentUris.withAppendedId(DeviceEntry.CONTENT_URI, itemId);
 
-                // Find the columns of phone attributes that we're interested in
                 int quantityColumnIndex = cursor.getColumnIndex(COLUMN_DEVICE_QUANTITY);
 
-                //read the phone attributes from the Cursor for the current phone
                 String deviceQuantity = cursor.getString(quantityColumnIndex);
 
                 //convert the string to an integer
@@ -188,12 +184,9 @@ public class DeviceDetailActivity extends AppCompatActivity
                 ContentValues updateValues = new ContentValues();
                 updateValues.put(DeviceEntry.COLUMN_DEVICE_QUANTITY, updateQuantity);
 
-                //update the phone with the content URI mCurrentPhoneUri and pass in the new
-                //content values. Pass in null for the selection and selection args
-                //because mCurrentPhoneUri will already identify the correct row in the database that
-                // we want to modify.
-                int rowsUpdate = getContentResolver().update(mCurrentPhoneUri, updateValues, null, null);
-            };
+                int rowsUpdate = getContentResolver().update(mCurrentDeviceUri, updateValues, null,
+                        null);
+            }
         });
 
         deleteButton.setOnClickListener(new View.OnClickListener() {
@@ -208,14 +201,15 @@ public class DeviceDetailActivity extends AppCompatActivity
                 builder.setMessage(R.string.delete_dialog_msg);
                 builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        // User clicked the "Delete" button, so delete the pet.
-                        //get the Uri for the current phone
+                        // User clicked the "Delete" button, so delete the device.
+                        //get the Uri for the current device
                         int itemIdColumnIndex = cursor.getColumnIndex(DeviceEntry._ID);
                         final long itemId = cursor.getLong(itemIdColumnIndex);
-                        Uri mCurrentPhoneUri = ContentUris.withAppendedId(DeviceEntry.CONTENT_URI, itemId);
+                        Uri mCurrentDeviceUri = ContentUris.withAppendedId(DeviceEntry.CONTENT_URI,
+                                itemId);
 
-                        //delete the current phone ID
-                        int rowsDeleted = getContentResolver().delete(mCurrentPhoneUri, null, null);
+                        int rowsDeleted = getContentResolver().delete(mCurrentDeviceUri, null,
+                                null);
 
                         // Close the activity
                         finish();
@@ -224,7 +218,7 @@ public class DeviceDetailActivity extends AppCompatActivity
                 builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // User clicked the "Cancel" button, so dismiss the dialog
-                        // and continue editing the pet.
+                        // and continue editing the device.
                         if (dialog != null) {
                             dialog.dismiss();
                         }
@@ -239,35 +233,36 @@ public class DeviceDetailActivity extends AppCompatActivity
 
         orderButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 // Perform action on click
                 Log.i(LOG_TAG, "TEST: Order onClick called");
 
-                //get the Uri for the current phone
+
                 int itemIdColumnIndex = cursor.getColumnIndex(DeviceEntry._ID);
                 final long itemId = cursor.getLong(itemIdColumnIndex);
-                Uri mCurrentPhoneUri = ContentUris.withAppendedId(DeviceEntry.CONTENT_URI, itemId);
+                Uri mCurrentDeviceUri = ContentUris.withAppendedId(DeviceEntry.CONTENT_URI, itemId);
 
-                // Find the columns of phone attributes that we're interested in
+
                 int contactColumnIndex = cursor.getColumnIndex(COLUMN_CONTACT_INFO);
                 int nameColumnIndex = cursor.getColumnIndex(COLUMN_DEVICE_NAME);
 
-                //read the phone attributes from the Cursor for the current phone
-                String phoneContact = cursor.getString(contactColumnIndex);
-                String[] emailTo = {phoneContact};
+                //read the device attributes from the Cursor for the current device
+                String deviceContact = cursor.getString(contactColumnIndex);
+                String[] message = {deviceContact};
 
-                //read the phone name to use in subject line
+                //read the device name to use in subject line
                 String deviceName = cursor.getString(nameColumnIndex);
                 String subjectLine = "Need to order: " + deviceName;
 
                 Intent intent = new Intent(Intent.ACTION_SENDTO);
                 intent.setData(Uri.parse("mailto:")); // only email apps should handle this
-                intent.putExtra(Intent.EXTRA_EMAIL, emailTo);
                 intent.putExtra(Intent.EXTRA_SUBJECT, subjectLine);
+                intent.putExtra(Intent.EXTRA_EMAIL, message);
                 if (intent.resolveActivity(getPackageManager()) != null) {
                     startActivity(intent);
                 }
-            };
+            }
+
         });
     }
 

@@ -2,7 +2,6 @@
 
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -28,7 +27,7 @@
             android:layout_centerHorizontal="true"
             android:fontFamily="sans-serif-medium"
             android:paddingTop="16dp"
-            android:text="NO DEVICES YET"
+            android:text="@string/activity_nodevice"
             android:textAppearance="?android:textAppearanceMedium"/>
 
         <TextView
@@ -39,7 +38,7 @@
             android:layout_centerHorizontal="true"
             android:fontFamily="sans-serif"
             android:paddingTop="8dp"
-            android:text="Get started by adding a device"
+            android:text="@string/activity_addevice"
             android:textAppearance="?android:textAppearanceSmall"
             android:textColor="#A2AAB0"/>
     </RelativeLayout>
@@ -48,12 +47,11 @@
         android:id="@+id/floatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:clickable="true"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        app:fabSize="mini"
         android:layout_margin="16dp"
-        app:srcCompat="@drawable/kettle"/>
+        android:clickable="true"
+        android:src="@drawable/kettle"/>
 
 
 </RelativeLayout>

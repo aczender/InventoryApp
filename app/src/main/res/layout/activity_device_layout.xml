@@ -22,14 +22,14 @@
                 android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:paddingRight="12dp"
-                android:text="Phone Name:"/>
+                android:text="@string/layout_device"/>
 
             <TextView
                 android:id="@+id/display_device_name"
                 style="@style/EditorFieldStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Phone 1"/>
+                android:text="@string/layout_devicename"/>
 
         </LinearLayout>
 
@@ -42,14 +42,14 @@
             <TextView
                 style="@style/EditorFieldStyle"
                 android:layout_width="120dp"
-                android:text="Price:" />
+                android:text="@string/layout_price" />
 
             <TextView
                 android:id="@+id/display_device_price"
                 style="@style/EditorFieldStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="100"/>
+                android:text="@string/layout_pricewithnumbers"/>
 
         </LinearLayout>
 
@@ -62,14 +62,14 @@
             <TextView
                 style="@style/EditorFieldStyle"
                 android:layout_width="120dp"
-                android:text="Supplier contact:" />
+                android:text="@string/layout_contact" />
 
             <TextView
                 android:id="@+id/display_contact_info"
                 style="@style/EditorFieldStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="999-999-9999"/>
+                android:text="@string/layout_contactinfo"/>
 
         </LinearLayout>
 
@@ -82,7 +82,7 @@
                 style="@style/EditorFieldStyle"
                 android:layout_width="120dp"
                 android:layout_height="wrap_content"
-                android:text="Quantity:"/>
+                android:text="@string/layout_quantity"/>
 
             <TextView
                 android:id="@+id/display_device_quantity"
@@ -90,19 +90,19 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="10"/>
+                android:text="@string/layout_quantitywithnumbers"/>
 
             <Button
                 android:id="@+id/minus_button"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
-                android:text="-"/>
+                android:text="@string/layout_minus"/>
 
             <Button
                 android:id="@+id/plus_button"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
-                android:text="+"/>
+                android:text="@string/layout_plus"/>
         </LinearLayout>
 
         <ImageView
@@ -119,17 +119,13 @@
 
         <Button
             android:id="@+id/delete_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="delete"/>
+            style="@style/LayoutButton"
+            android:text="@string/layout_delete"/>
 
         <Button
             android:id="@+id/order_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="order"/>
+            style="@style/LayoutButton"
+            android:text="@string/layout_order"/>
 
 
     </LinearLayout>

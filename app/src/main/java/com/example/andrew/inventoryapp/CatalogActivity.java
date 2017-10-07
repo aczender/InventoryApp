@@ -57,7 +57,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         deviceListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                Log.i(LOG_TAG, "Test");
+                Log.i(LOG_TAG, "Test: something called");
                 Intent intent = new Intent(CatalogActivity.this, DeviceDetailActivity.class);
 
                 Uri currentDeviceUri = ContentUris.withAppendedId(DeviceEntry.CONTENT_URI, id);
@@ -71,10 +71,10 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
 
     private void insertDevice() {
         ContentValues values = new ContentValues();
-        values.put(DeviceEntry.COLUMN_DEVICE_NAME, "Phone");
-        values.put(DeviceEntry.COLUMN_DEVICE_QUANTITY, 2);
-        values.put(DeviceEntry.COLUMN_DEVICE_PRICE, 20);
-        values.put(DeviceEntry.COLUMN_CONTACT_INFO, "sg@sg.com");
+        values.put(DeviceEntry.COLUMN_DEVICE_NAME, "DummyDevice");
+        values.put(DeviceEntry.COLUMN_DEVICE_QUANTITY, 1);
+        values.put(DeviceEntry.COLUMN_DEVICE_PRICE, 99);
+        values.put(DeviceEntry.COLUMN_CONTACT_INFO, "dummy@dummy.com");
         values.put(DeviceEntry.COLUMN_DEVICE_PICTURE, "samplepic");
 
         Uri newUri = getContentResolver().insert(DeviceEntry.CONTENT_URI, values);
