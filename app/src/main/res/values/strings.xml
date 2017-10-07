@@ -49,6 +49,7 @@
     <string name="quantity_required">Please enter a quantity</string>
     <string name="price_required">Please enter a price</string>
     <string name="contact_required">Please enter a contact</string>
+    <string name="picture_required">Please add a picture</string>
 
     <string name="picture_added">You have added a picture</string>
 

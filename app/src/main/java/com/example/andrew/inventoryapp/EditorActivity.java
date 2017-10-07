@@ -1,12 +1,15 @@
 package com.example.andrew.inventoryapp;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -21,15 +24,13 @@ import android.widget.Toast;
 
 import com.example.andrew.inventoryapp.data.InventoryContract.DeviceEntry;
 
+
 /**
  * Allows user to create a new device or edit an existing one.
  */
 public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-
-    private static final String LOG_TAG = EditorActivity.class.getName();
-
-    private static final int PICK_IMAGE_REQUEST = 0;
+    private static int RESULT_LOAD_IMAGE = 0;
 
     private Uri mCurrentDeviceUri;
     private EditText mNameEditText;
@@ -37,9 +38,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private EditText mPriceEditText;
     private EditText mContactEditText;
     private TextView mPictureText;
+    private TextView mTextView;
 
     private Uri mUri;
-    private TextView mTextView;
 
 
     @Override
@@ -47,6 +48,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
 
+        mTextView = (TextView) findViewById(R.id.imgView);
 
         Button pictureButton = (Button) findViewById(R.id.add_picture);
         pictureButton.setOnClickListener(new View.OnClickListener() {
@@ -60,7 +62,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mQuantityEditText = (EditText) findViewById(R.id.edit_device_quantity);
         mPriceEditText = (EditText) findViewById(R.id.edit_device_price);
         mContactEditText = (EditText) findViewById(R.id.edit_device_contact);
-        mPictureText = (TextView) findViewById(R.id.image_uri);
+        mPictureText = (TextView) findViewById(R.id.imgView);
     }
 
     private void saveDevice() {
@@ -109,6 +111,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 String contactString = mContactEditText.getText().toString().trim();
                 String pictureString = mPictureText.getText().toString().trim();
 
+
                 if (TextUtils.isEmpty(nameString)) {
                     Toast.makeText(this, getString(R.string.name_required), Toast.LENGTH_SHORT)
                             .show();
@@ -125,6 +128,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                     Toast.makeText(this, getString(R.string.contact_required),
                             Toast.LENGTH_SHORT).show();
                     return false;
+                } else if (TextUtils.isEmpty(pictureString)) {
+                    Toast.makeText(this, getString(R.string.picture_required),
+                            Toast.LENGTH_SHORT).show();
+                    return false;
                 }
                 saveDevice();
                 finish();
@@ -137,8 +144,26 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     }
 
     public void openImageSelector() {
-        Toast.makeText(this, getString(R.string.picture_added),
-                Toast.LENGTH_SHORT).show();
+        Intent intent;
+
+        if (Build.VERSION.SDK_INT < 19) {
+            intent = new Intent(Intent.ACTION_GET_CONTENT);
+        } else {
+            intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+        }
+
+        intent.setType("image/*");
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), RESULT_LOAD_IMAGE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == Activity.RESULT_OK) {
+            mUri = data.getData();
+            mTextView.setText(mUri.toString());
+        }
     }
 
     @Override
@@ -157,6 +182,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     /**
      * Prompt the user to confirm that they want to delete this device.
      */
+
     private void showDeleteConfirmationDialog() {
         // Create an AlertDialog.Builder and set the message, and click listeners
         // for the postivie and negative buttons on the dialog.
@@ -168,15 +194,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 deleteDevice();
             }
         });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User clicked the "Cancel" button, so dismiss the dialog
-                // and continue editing the device.
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
-            }
-        });
+        builder.setNegativeButton(R.string.cancel, null);
 
         // Create and show the AlertDialog
         AlertDialog alertDialog = builder.create();
